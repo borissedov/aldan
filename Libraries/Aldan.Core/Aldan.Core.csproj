@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
+        <PackageReference Include="EasyCaching.InMemory" Version="0.5.6" />
+        <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.5" />
+        <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.165" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Include="Humanizer" Version="2.6.2" />
+        <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />
+        <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.0.165" />
+    </ItemGroup>
+</Project>

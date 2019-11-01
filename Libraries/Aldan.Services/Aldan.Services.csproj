@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="MaxMind.GeoIP2" Version="3.0.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.15" />
+        <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Aldan.Core\Aldan.Core.csproj" />
+      <ProjectReference Include="..\Aldan.Data\Aldan.Data.csproj" />
+    </ItemGroup>
+
+</Project>

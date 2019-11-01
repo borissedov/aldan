@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{77299C47-88C6-4EAA-8195-D28EF5CD791E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{6DC5A6E4-C25B-445B-A6A8-4019607356EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aldan.Web", "Presentation\Aldan.Web\Aldan.Web.csproj", "{7DA75AD9-2361-4F17-972C-E99915835D5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aldan.Core", "Libraries\Aldan.Core\Aldan.Core.csproj", "{53278150-D8CD-4B80-8491-7AC7BAC3517C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aldan.Services", "Libraries\Aldan.Services\Aldan.Services.csproj", "{4BC5FDD7-4D14-449F-93B9-258736A9EF0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aldan.Web.Framework", "Presentation\Aldan.Web.Framework\Aldan.Web.Framework.csproj", "{A7A9A8DD-93C7-494D-860F-9D955BE3E679}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aldan.Data", "Libraries\Aldan.Data\Aldan.Data.csproj", "{A6993568-825C-448D-9158-3F5A4AFED65C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7DA75AD9-2361-4F17-972C-E99915835D5C} = {6DC5A6E4-C25B-445B-A6A8-4019607356EE}
+		{53278150-D8CD-4B80-8491-7AC7BAC3517C} = {77299C47-88C6-4EAA-8195-D28EF5CD791E}
+		{4BC5FDD7-4D14-449F-93B9-258736A9EF0E} = {77299C47-88C6-4EAA-8195-D28EF5CD791E}
+		{A7A9A8DD-93C7-494D-860F-9D955BE3E679} = {6DC5A6E4-C25B-445B-A6A8-4019607356EE}
+		{A6993568-825C-448D-9158-3F5A4AFED65C} = {77299C47-88C6-4EAA-8195-D28EF5CD791E}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7DA75AD9-2361-4F17-972C-E99915835D5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DA75AD9-2361-4F17-972C-E99915835D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DA75AD9-2361-4F17-972C-E99915835D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DA75AD9-2361-4F17-972C-E99915835D5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53278150-D8CD-4B80-8491-7AC7BAC3517C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53278150-D8CD-4B80-8491-7AC7BAC3517C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53278150-D8CD-4B80-8491-7AC7BAC3517C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53278150-D8CD-4B80-8491-7AC7BAC3517C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BC5FDD7-4D14-449F-93B9-258736A9EF0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BC5FDD7-4D14-449F-93B9-258736A9EF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BC5FDD7-4D14-449F-93B9-258736A9EF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BC5FDD7-4D14-449F-93B9-258736A9EF0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7A9A8DD-93C7-494D-860F-9D955BE3E679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7A9A8DD-93C7-494D-860F-9D955BE3E679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7A9A8DD-93C7-494D-860F-9D955BE3E679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7A9A8DD-93C7-494D-860F-9D955BE3E679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6993568-825C-448D-9158-3F5A4AFED65C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6993568-825C-448D-9158-3F5A4AFED65C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6993568-825C-448D-9158-3F5A4AFED65C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6993568-825C-448D-9158-3F5A4AFED65C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
