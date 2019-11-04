@@ -1,5 +1,5 @@
 using System;
-using Aldan.Core.Domain.Customers;
+using Aldan.Core.Domain.Users;
 
 namespace Aldan.Core.Domain.Logging
 {
@@ -29,9 +29,9 @@ namespace Aldan.Core.Domain.Logging
         public string IpAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer identifier
+        /// Gets or sets the user identifier
         /// </summary>
-        public int? CustomerId { get; set; }
+        public int? UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the page URL
@@ -58,8 +58,8 @@ namespace Aldan.Core.Domain.Logging
         }
 
         /// <summary>
-        /// Gets or sets the customer
+        /// Gets or sets the user
         /// </summary>
-        public virtual Customer Customer { get; set; }
+        public virtual User User { get; set; }
     }
 }

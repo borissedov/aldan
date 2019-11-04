@@ -12,9 +12,9 @@ namespace Aldan.Core.Http
         public static string Prefix => ".Aldan";
 
         /// <summary>
-        /// Gets a cookie name of the customer
+        /// Gets a cookie name of the user
         /// </summary>
-        public static string CustomerCookie => ".Customer";
+        public static string UserCookie => ".User";
 
         /// <summary>
         /// Gets a cookie name of the antiforgery

@@ -29,31 +29,31 @@ namespace Aldan.Web.Infrastructure
 
             //login
             routeBuilder.MapRoute("Login", "login/",
-				new { controller = "Customer", action = "Login" });
+				new { controller = "User", action = "Login" });
 
             //register
             routeBuilder.MapRoute("Register", "register/",
-				new { controller = "Customer", action = "Register" });
+				new { controller = "User", action = "Register" });
 
             //logout
             routeBuilder.MapRoute("Logout", "logout/",
-				new { controller = "Customer", action = "Logout" });
+				new { controller = "User", action = "Logout" });
 
             //register result page
             routeBuilder.MapRoute("RegisterResult", "registerresult/{resultId:min(0)}",
-				new { controller = "Customer", action = "RegisterResult" });
+				new { controller = "User", action = "RegisterResult" });
 
             //check username availability
-            routeBuilder.MapRoute("CheckUsernameAvailability", "customer/checkusernameavailability",
-				new { controller = "Customer", action = "CheckUsernameAvailability" });
+            routeBuilder.MapRoute("CheckUsernameAvailability", "user/checkusernameavailability",
+				new { controller = "User", action = "CheckUsernameAvailability" });
 
             //passwordrecovery
             routeBuilder.MapRoute("PasswordRecovery", "passwordrecovery",
-				new { controller = "Customer", action = "PasswordRecovery" });
+				new { controller = "User", action = "PasswordRecovery" });
 
             //password recovery confirmation
             routeBuilder.MapRoute("PasswordRecoveryConfirm", "passwordrecovery/confirm",
-				new { controller = "Customer", action = "PasswordRecoveryConfirm" });
+				new { controller = "User", action = "PasswordRecoveryConfirm" });
 
             //error page
             routeBuilder.MapRoute("Error", "error",

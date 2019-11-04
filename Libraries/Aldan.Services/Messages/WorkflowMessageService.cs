@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using Aldan.Core;
 using Aldan.Core.Configuration;
-using Aldan.Core.Domain.Customers;
 using Aldan.Core.Domain.Messages;
+using Aldan.Core.Domain.Users;
 
 namespace Aldan.Services.Messages
 {
@@ -67,25 +67,25 @@ namespace Aldan.Services.Messages
 
         #region Methods
 
-        #region Customer workflow
+        #region User workflow
 
         /// <summary>
-        /// Sends 'New customer' notification message to a platform owner
+        /// Sends 'New user' notification message to a platform owner
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerRegisteredNotificationMessage(Customer customer)
+        public virtual IList<int> SendUserRegisteredNotificationMessage(User user)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerRegisteredNotification);
+            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.UserRegisteredNotification);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            _messageTokenProvider.AddUserTokens(commonTokens, user);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -100,60 +100,60 @@ namespace Aldan.Services.Messages
         }
 
         /// <summary>
-        /// Sends a welcome message to a customer
+        /// Sends a welcome message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerWelcomeMessage(Customer customer)
+        public virtual IList<int> SendUserWelcomeMessage(User user)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerWelcomeMessage);
+            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.UserWelcomeMessage);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            _messageTokenProvider.AddUserTokens(commonTokens, user);
 
             return messageTemplates.Select(messageTemplate =>
             {
                 var tokens = new List<Token>(commonTokens);
                 _messageTokenProvider.AddPlatformTokens(tokens);
 
-                var toEmail = customer.Email;
-                var toName = customer.Email;// = _customerService.GetCustomerFullName(customer);
+                var toEmail = user.Email;
+                var toName = user.Email;// = _userService.GetUserFullName(user);
 
                 return SendNotification(messageTemplate, tokens, toEmail, toName);
             }).ToList();
         }
 
         /// <summary>
-        /// Sends password recovery message to a customer
+        /// Sends password recovery message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerPasswordRecoveryMessage(Customer customer)
+        public virtual IList<int> SendUserPasswordRecoveryMessage(User user)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerPasswordRecoveryMessage);
+            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.UserPasswordRecoveryMessage);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            _messageTokenProvider.AddUserTokens(commonTokens, user);
 
             return messageTemplates.Select(messageTemplate =>
             {
                 var tokens = new List<Token>(commonTokens);
                 _messageTokenProvider.AddPlatformTokens(tokens);
 
-                var toEmail = customer.Email;
-                var toName = customer.Email;//= _customerService.GetCustomerFullName(customer);
+                var toEmail = user.Email;
+                var toName = user.Email;//= _userService.GetUserFullName(user);
 
                 return SendNotification(messageTemplate, tokens, toEmail, toName);
             }).ToList();

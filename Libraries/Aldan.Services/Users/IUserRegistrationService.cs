@@ -1,26 +1,26 @@
-using Aldan.Core.Domain.Customers;
+using Aldan.Core.Domain.Users;
 
-namespace Aldan.Services.Customers
+namespace Aldan.Services.Users
 {
     /// <summary>
-    /// Customer registration interface
+    /// User registration interface
     /// </summary>
-    public partial interface ICustomerRegistrationService
+    public partial interface IUserRegistrationService
     {
         /// <summary>
-        /// Validate customer
+        /// Validate user
         /// </summary>
         /// <param name="usernameOrEmail">Username or email</param>
         /// <param name="password">Password</param>
         /// <returns>Result</returns>
-        CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password);
+        UserLoginResults ValidateUser(string usernameOrEmail, string password);
 
         /// <summary>
-        /// Register customer
+        /// Register user
         /// </summary>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request);
+        UserRegistrationResult RegisterUser(UserRegistrationRequest request);
 
         /// <summary>
         /// Change password
@@ -32,9 +32,9 @@ namespace Aldan.Services.Customers
         /// <summary>
         /// Sets a user email
         /// </summary>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <param name="newEmail">New email</param>
         /// <param name="requireValidation">Require validation of new email address</param>
-        void SetEmail(Customer customer, string newEmail, bool requireValidation);
+        void SetEmail(User user, string newEmail, bool requireValidation);
     }
 }

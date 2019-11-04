@@ -1,4 +1,4 @@
-﻿namespace Aldan.Services.Customers
+﻿namespace Aldan.Services.Users
 {
     /// <summary>
     /// Change password request

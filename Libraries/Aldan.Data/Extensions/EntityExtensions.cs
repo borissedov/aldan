@@ -22,7 +22,7 @@ namespace Aldan.Data.Extensions
             //in EF 6 we could use ObjectContext.GetObjectType. Now it's not available. Here is a workaround:
 
             var type = entity.GetType();
-            //e.g. "CustomerProxy" will be derived from "Customer". And "Customer" is derived from BaseEntity
+            //e.g. "UserProxy" will be derived from "User". And "User" is derived from BaseEntity
             return type.BaseType != null && type.BaseType.BaseType != null && type.BaseType.BaseType == typeof(BaseEntity);
         }
 

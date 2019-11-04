@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Aldan.Services.Customers
+namespace Aldan.Services.Users
 {
     /// <summary>
-    /// Customer registration result
+    /// User registration result
     /// </summary>
-    public class CustomerRegistrationResult
+    public class UserRegistrationResult
     {
-        public CustomerRegistrationResult()
+        public UserRegistrationResult()
         {
             Errors = new List<string>();
         }

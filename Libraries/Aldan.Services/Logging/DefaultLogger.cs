@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Aldan.Core;
 using Aldan.Core.Data;
-using Aldan.Core.Domain.Customers;
 using Aldan.Core.Domain.Logging;
+using Aldan.Core.Domain.Users;
 using Aldan.Data.Extensions;
 
 namespace Aldan.Services.Logging
@@ -171,9 +171,9 @@ namespace Aldan.Services.Logging
         /// <param name="logLevel">Log level</param>
         /// <param name="shortMessage">The short message</param>
         /// <param name="fullMessage">The full message</param>
-        /// <param name="customer">The customer to associate log record with</param>
+        /// <param name="user">The user to associate log record with</param>
         /// <returns>A log item</returns>
-        public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
+        public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", User user = null)
         {
             var log = new Log
             {
@@ -181,7 +181,7 @@ namespace Aldan.Services.Logging
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
-                Customer = customer,
+                User = user,
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow
@@ -197,15 +197,15 @@ namespace Aldan.Services.Logging
         /// </summary>
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
-        /// <param name="customer">Customer</param>
-        public virtual void Information(string message, Exception exception = null, Customer customer = null)
+        /// <param name="user">User</param>
+        public virtual void Information(string message, Exception exception = null, User user = null)
         {
             //don't log thread abort exception
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
             if (IsEnabled(LogLevel.Information))
-                InsertLog(LogLevel.Information, message, exception?.ToString() ?? string.Empty, customer);
+                InsertLog(LogLevel.Information, message, exception?.ToString() ?? string.Empty, user);
         }
 
         /// <summary>
@@ -213,15 +213,15 @@ namespace Aldan.Services.Logging
         /// </summary>
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
-        /// <param name="customer">Customer</param>
-        public virtual void Warning(string message, Exception exception = null, Customer customer = null)
+        /// <param name="user">User</param>
+        public virtual void Warning(string message, Exception exception = null, User user = null)
         {
             //don't log thread abort exception
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
             if (IsEnabled(LogLevel.Warning))
-                InsertLog(LogLevel.Warning, message, exception?.ToString() ?? string.Empty, customer);
+                InsertLog(LogLevel.Warning, message, exception?.ToString() ?? string.Empty, user);
         }
 
         /// <summary>
@@ -229,15 +229,15 @@ namespace Aldan.Services.Logging
         /// </summary>
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
-        /// <param name="customer">Customer</param>
-        public virtual void Error(string message, Exception exception = null, Customer customer = null)
+        /// <param name="user">User</param>
+        public virtual void Error(string message, Exception exception = null, User user = null)
         {
             //don't log thread abort exception
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
             if (IsEnabled(LogLevel.Error))
-                InsertLog(LogLevel.Error, message, exception?.ToString() ?? string.Empty, customer);
+                InsertLog(LogLevel.Error, message, exception?.ToString() ?? string.Empty, user);
         }
 
         #endregion

@@ -1,23 +1,23 @@
 using System;
 
-namespace Aldan.Core.Domain.Customers
+namespace Aldan.Core.Domain.Users
 {
     /// <summary>
-    /// Represents a customer
+    /// Represents a user
     /// </summary>
-    public partial class Customer : BaseEntity
+    public partial class User : BaseEntity
     {
 //        private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
 
-        public Customer()
+        public User()
         {
-            CustomerGuid = Guid.NewGuid();
+            UserGuid = Guid.NewGuid();
         }
 
         /// <summary>
-        /// Gets or sets the customer GUID
+        /// Gets or sets the user GUID
         /// </summary>
-        public Guid CustomerGuid { get; set; }
+        public Guid UserGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the email
@@ -57,13 +57,13 @@ namespace Aldan.Core.Domain.Customers
         public bool Deleted { get; set; }
         
         public Role Role { get; set; }
-        public int? ImpersonatedCustomerId { get; set; }
+        public int? ImpersonatedUserId { get; set; }
         public string PasswordRecoveryToken { get; set; }
 
         #region Navigation properties
 
 //        /// <summary>
-//        /// Gets or sets customer generated content
+//        /// Gets or sets user generated content
 //        /// </summary>
 //        public virtual ICollection<ExternalAuthenticationRecord> ExternalAuthenticationRecords
 //        {

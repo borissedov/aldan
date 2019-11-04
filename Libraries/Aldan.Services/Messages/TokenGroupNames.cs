@@ -11,9 +11,9 @@
         public const string FrameworkTokens = "Framework tokens";
 
         /// <summary>
-        /// Represents tokens with information about the customer
+        /// Represents tokens with information about the user
         /// </summary>
-        public const string CustomerTokens = "Customer tokens";
+        public const string UserTokens = "User tokens";
 
         /// <summary>
         /// Represents tokens with information about contact us

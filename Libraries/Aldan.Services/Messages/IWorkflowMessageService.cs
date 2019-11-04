@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Aldan.Core.Domain.Customers;
 using Aldan.Core.Domain.Messages;
+using Aldan.Core.Domain.Users;
 
 namespace Aldan.Services.Messages
 {
@@ -9,28 +9,28 @@ namespace Aldan.Services.Messages
     /// </summary>
     public partial interface IWorkflowMessageService
     {
-        #region Customer workflow
+        #region User workflow
 
         /// <summary>
-        /// Sends 'New customer' notification message to a platform owner
+        /// Sends 'New user' notification message to a platform owner
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerRegisteredNotificationMessage(Customer customer);
+        IList<int> SendUserRegisteredNotificationMessage(User user);
 
         /// <summary>
-        /// Sends a welcome message to a customer
+        /// Sends a welcome message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerWelcomeMessage(Customer customer);
+        IList<int> SendUserWelcomeMessage(User user);
         
         /// <summary>
-        /// Sends password recovery message to a customer
+        /// Sends password recovery message to a user
         /// </summary>
-        /// <param name="customer">Customer instance</param>
+        /// <param name="user">User instance</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendCustomerPasswordRecoveryMessage(Customer customer);
+        IList<int> SendUserPasswordRecoveryMessage(User user);
 
         #endregion
 

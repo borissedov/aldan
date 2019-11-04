@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Aldan.Core.Domain.Customers;
-using Aldan.Services.Customers;
+using Aldan.Core.Domain.Users;
+using Aldan.Services.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
@@ -15,20 +15,20 @@ namespace Aldan.Services.Authentication
     {
         #region Fields
 
-        private readonly ICustomerService _customerService;
+        private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        private Customer _cachedCustomer;
+        private User _cachedUser;
 
         #endregion
 
         #region Ctor
 
         public CookieAuthenticationService(
-            ICustomerService customerService,
+            IUserService userService,
             IHttpContextAccessor httpContextAccessor)
         {
-            _customerService = customerService;
+            _userService = userService;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -39,18 +39,18 @@ namespace Aldan.Services.Authentication
         /// <summary>
         /// Sign in
         /// </summary>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
-        public virtual async void SignIn(Customer customer, bool isPersistent)
+        public virtual async void SignIn(User user, bool isPersistent)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
 
-            //create claims for customer's username and email
+            //create claims for user's username and email
             var claims = new List<Claim>();
 
-            if (!string.IsNullOrEmpty(customer.Email))
-                claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, AldanAuthenticationDefaults.ClaimsIssuer));
+            if (!string.IsNullOrEmpty(user.Email))
+                claims.Add(new Claim(ClaimTypes.Email, user.Email, ClaimValueTypes.Email, AldanAuthenticationDefaults.ClaimsIssuer));
 
             //create principal for the current authentication scheme
             var userIdentity = new ClaimsIdentity(claims, AldanAuthenticationDefaults.AuthenticationScheme);
@@ -66,8 +66,8 @@ namespace Aldan.Services.Authentication
             //sign in
             await _httpContextAccessor.HttpContext.SignInAsync(AldanAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
 
-            //cache authenticated customer
-            _cachedCustomer = customer;
+            //cache authenticated user
+            _cachedUser = user;
         }
 
         /// <summary>
@@ -75,40 +75,40 @@ namespace Aldan.Services.Authentication
         /// </summary>
         public virtual async void SignOut()
         {
-            //reset cached customer
-            _cachedCustomer = null;
+            //reset cached user
+            _cachedUser = null;
 
             //and sign out from the current authentication scheme
             await _httpContextAccessor.HttpContext.SignOutAsync(AldanAuthenticationDefaults.AuthenticationScheme);
         }
 
         /// <summary>
-        /// Get authenticated customer
+        /// Get authenticated user
         /// </summary>
-        /// <returns>Customer</returns>
-        public virtual Customer GetAuthenticatedCustomer()
+        /// <returns>User</returns>
+        public virtual User GetAuthenticatedUser()
         {
-            //whether there is a cached customer
-            if (_cachedCustomer != null)
-                return _cachedCustomer;
+            //whether there is a cached user
+            if (_cachedUser != null)
+                return _cachedUser;
 
             //try to get authenticated user identity
             var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(AldanAuthenticationDefaults.AuthenticationScheme).Result;
             if (!authenticateResult.Succeeded)
                 return null;
 
-            Customer customer = null;
+            User user = null;
             
-            //try to get customer by email
+            //try to get user by email
             var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                 && claim.Issuer.Equals(AldanAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
             if (emailClaim != null)
-                customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                user = _userService.GetUserByEmail(emailClaim.Value);
 
-            //cache authenticated customer
-            _cachedCustomer = customer;
+            //cache authenticated user
+            _cachedUser = user;
 
-            return _cachedCustomer;
+            return _cachedUser;
         }
 
         #endregion

@@ -1,9 +1,9 @@
-﻿namespace Aldan.Services.Customers
+﻿namespace Aldan.Services.Users
 {
     /// <summary>
-    /// Represents default values related to customer services
+    /// Represents default values related to user services
     /// </summary>
-    public static partial class AldanCustomerServiceDefaults
+    public static partial class AldanUserServiceDefaults
     {
 
         /// <summary>

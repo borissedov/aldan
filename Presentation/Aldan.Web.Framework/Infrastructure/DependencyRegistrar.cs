@@ -8,12 +8,12 @@ using Aldan.Core.Infrastructure;
 using Aldan.Core.Infrastructure.DependencyManagement;
 using Aldan.Data;
 using Aldan.Services.Authentication;
-using Aldan.Services.Customers;
 using Aldan.Services.Events;
 using Aldan.Services.Logging;
 using Aldan.Services.Messages;
 using Aldan.Services.Security;
 using Aldan.Services.Tasks;
+using Aldan.Services.Users;
 using Aldan.Web.Framework.Routing;
 using Autofac;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -65,8 +65,8 @@ namespace Aldan.Web.Framework.Infrastructure
             
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerLifetimeScope();
             builder.RegisterType<CookieAuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerLifetimeScope();
-            builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerLifetimeScope();
+            builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
+            builder.RegisterType<UserRegistrationService>().As<IUserRegistrationService>().InstancePerLifetimeScope();
 
             builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerLifetimeScope();
             builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerLifetimeScope();

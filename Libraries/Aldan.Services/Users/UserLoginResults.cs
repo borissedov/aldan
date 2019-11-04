@@ -1,9 +1,9 @@
-namespace Aldan.Services.Customers
+namespace Aldan.Services.Users
 {
     /// <summary>
-    /// Represents the customer login result enumeration
+    /// Represents the user login result enumeration
     /// </summary>
-    public enum CustomerLoginResults
+    public enum UserLoginResults
     {
         /// <summary>
         /// Login successful
@@ -11,9 +11,9 @@ namespace Aldan.Services.Customers
         Successful = 1,
 
         /// <summary>
-        /// Customer does not exist (email or username)
+        /// User does not exist (email or username)
         /// </summary>
-        CustomerNotExist = 2,
+        UserNotExist = 2,
 
         /// <summary>
         /// Wrong password

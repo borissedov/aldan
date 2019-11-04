@@ -5,22 +5,22 @@ namespace Aldan.Core.Domain.Messages
     /// </summary>
     public static partial class MessageTemplateSystemNames
     {
-        #region Customer
+        #region User
 
         /// <summary>
         /// Represents system name of notification about new registration
         /// </summary>
-        public const string CustomerRegisteredNotification = "NewCustomer.Notification";
+        public const string UserRegisteredNotification = "NewUser.Notification";
 
         /// <summary>
-        /// Represents system name of customer welcome message
+        /// Represents system name of user welcome message
         /// </summary>
-        public const string CustomerWelcomeMessage = "Customer.WelcomeMessage";
+        public const string UserWelcomeMessage = "User.WelcomeMessage";
 
         /// <summary>
         /// Represents system name of password recovery message
         /// </summary>
-        public const string CustomerPasswordRecoveryMessage = "Customer.PasswordRecovery";
+        public const string UserPasswordRecoveryMessage = "User.PasswordRecovery";
 
         #endregion
 

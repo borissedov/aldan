@@ -73,8 +73,8 @@ namespace Aldan.Services.Messages
         {
             if (exception == null)
                 return;
-            var customer = _workContext.CurrentCustomer;
-            _logger.Error(exception.Message, exception, customer);
+            var user = _workContext.CurrentUser;
+            _logger.Error(exception.Message, exception, user);
         }
 
         #endregion

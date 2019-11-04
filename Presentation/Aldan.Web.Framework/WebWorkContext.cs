@@ -1,9 +1,9 @@
 ﻿using System;
 using Aldan.Core;
-using Aldan.Core.Domain.Customers;
+using Aldan.Core.Domain.Users;
 using Aldan.Core.Http;
 using Aldan.Services.Authentication;
-using Aldan.Services.Customers;
+using Aldan.Services.Users;
 using Microsoft.AspNetCore.Http;
 
 namespace Aldan.Web.Framework
@@ -16,10 +16,10 @@ namespace Aldan.Web.Framework
         #region Fields
 
         private readonly IAuthenticationService _authenticationService;
-        private readonly ICustomerService _customerService;
+        private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private Customer _cachedCustomer;
-        private Customer _originalCustomerIfImpersonated;
+        private User _cachedUser;
+        private User _originalUserIfImpersonated;
 
         #endregion
 
@@ -27,11 +27,11 @@ namespace Aldan.Web.Framework
 
         public WebWorkContext(
             IAuthenticationService authenticationService,
-            ICustomerService customerService,
+            IUserService userService,
             IHttpContextAccessor httpContextAccessor)
         {
             _authenticationService = authenticationService;
-            _customerService = customerService;
+            _userService = userService;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -40,26 +40,26 @@ namespace Aldan.Web.Framework
         #region Utilities
 
         /// <summary>
-        /// Get Aldan customer cookie
+        /// Get Aldan user cookie
         /// </summary>
         /// <returns>String value of cookie</returns>
-        protected virtual string GetCustomerCookie()
+        protected virtual string GetUserCookie()
         {
-            var cookieName = $"{AldanCookieDefaults.Prefix}{AldanCookieDefaults.CustomerCookie}";
+            var cookieName = $"{AldanCookieDefaults.Prefix}{AldanCookieDefaults.UserCookie}";
             return _httpContextAccessor.HttpContext?.Request?.Cookies[cookieName];
         }
 
         /// <summary>
-        /// Set Aldan customer cookie
+        /// Set Aldan user cookie
         /// </summary>
-        /// <param name="customerGuid">Guid of the customer</param>
-        protected virtual void SetCustomerCookie(Guid customerGuid)
+        /// <param name="userGuid">Guid of the user</param>
+        protected virtual void SetUserCookie(Guid userGuid)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
 
             //delete current cookie value
-            var cookieName = $"{AldanCookieDefaults.Prefix}{AldanCookieDefaults.CustomerCookie}";
+            var cookieName = $"{AldanCookieDefaults.Prefix}{AldanCookieDefaults.UserCookie}";
             _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookieName);
 
             //get date of cookie expiration
@@ -67,7 +67,7 @@ namespace Aldan.Web.Framework
             var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
 
             //if passed guid is empty set cookie as expired
-            if (customerGuid == Guid.Empty)
+            if (userGuid == Guid.Empty)
                 cookieExpiresDate = DateTime.Now.AddMonths(-1);
 
             //set new cookie value
@@ -76,7 +76,7 @@ namespace Aldan.Web.Framework
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };
-            _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, customerGuid.ToString(), options);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, userGuid.ToString(), options);
         }
        
 
@@ -85,75 +85,75 @@ namespace Aldan.Web.Framework
         #region Properties
 
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets or sets the current user
         /// </summary>
-        public virtual Customer CurrentCustomer
+        public virtual User CurrentUser
         {
             get
             {
                 //whether there is a cached value
-                if (_cachedCustomer != null)
-                    return _cachedCustomer;
+                if (_cachedUser != null)
+                    return _cachedUser;
                       
                 //try to get registered user
-                Customer customer = _authenticationService.GetAuthenticatedCustomer();
+                User user = _authenticationService.GetAuthenticatedUser();
 
-                if (customer != null && !customer.Deleted)
+                if (user != null && !user.Deleted)
                 {
                     //get impersonate user if required
-                    var impersonatedCustomerId = customer.ImpersonatedCustomerId;
-                    if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
+                    var impersonatedUserId = user.ImpersonatedUserId;
+                    if (impersonatedUserId.HasValue && impersonatedUserId.Value > 0)
                     {
-                        var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
-                        if (impersonatedCustomer != null && !impersonatedCustomer.Deleted)
+                        var impersonatedUser = _userService.GetUserById(impersonatedUserId.Value);
+                        if (impersonatedUser != null && !impersonatedUser.Deleted)
                         {
-                            //set impersonated customer
-                            _originalCustomerIfImpersonated = customer;
-                            customer = impersonatedCustomer;
+                            //set impersonated user
+                            _originalUserIfImpersonated = user;
+                            user = impersonatedUser;
                         }
                     }
                 }
 
-                if (customer == null || customer.Deleted)
+                if (user == null || user.Deleted)
                 {
-                    //get guest customer
-                    var customerCookie = GetCustomerCookie();
-                    if (!string.IsNullOrEmpty(customerCookie))
+                    //get guest user
+                    var userCookie = GetUserCookie();
+                    if (!string.IsNullOrEmpty(userCookie))
                     {
-                        if (Guid.TryParse(customerCookie, out Guid customerGuid))
+                        if (Guid.TryParse(userCookie, out Guid userGuid))
                         {
-                            //get customer from cookie (should not be registered)
-                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                            if (customerByCookie != null)
-                                customer = customerByCookie;
+                            //get user from cookie (should not be registered)
+                            var userByCookie = _userService.GetUserByGuid(userGuid);
+                            if (userByCookie != null)
+                                user = userByCookie;
                         }
                     }
                 }
 
-                if (customer != null && !customer.Deleted)
+                if (user != null && !user.Deleted)
                 {
-                    //set customer cookie
-                    SetCustomerCookie(customer.CustomerGuid);
+                    //set user cookie
+                    SetUserCookie(user.UserGuid);
 
-                    //cache the found customer
-                    _cachedCustomer = customer;
+                    //cache the found user
+                    _cachedUser = user;
                 }
 
-                return _cachedCustomer;
+                return _cachedUser;
             }
             set
             {
-                SetCustomerCookie(value.CustomerGuid);
-                _cachedCustomer = value;
+                SetUserCookie(value.UserGuid);
+                _cachedUser = value;
             }
         }
 
         /// <summary>
-        /// Gets the original customer (in case the current one is impersonated)
+        /// Gets the original user (in case the current one is impersonated)
         /// </summary>
-        public virtual Customer OriginalCustomerIfImpersonated
+        public virtual User OriginalUserIfImpersonated
         {
-            get { return _originalCustomerIfImpersonated; }
+            get { return _originalUserIfImpersonated; }
         }
 
         #endregion

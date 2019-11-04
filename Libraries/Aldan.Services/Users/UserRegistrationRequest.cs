@@ -1,30 +1,30 @@
-﻿using Aldan.Core.Domain.Customers;
+﻿using Aldan.Core.Domain.Users;
 
-namespace Aldan.Services.Customers
+namespace Aldan.Services.Users
 {
     /// <summary>
-    /// Customer registration request
+    /// User registration request
     /// </summary>
-    public class CustomerRegistrationRequest
+    public class UserRegistrationRequest
     {
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <param name="email">Email</param>
         /// <param name="password">Password</param>
-        public CustomerRegistrationRequest(Customer customer, string email, 
+        public UserRegistrationRequest(User user, string email, 
             string password)
         {
-            Customer = customer;
+            User = user;
             Email = email;
             Password = password;
         }
 
         /// <summary>
-        /// Customer
+        /// User
         /// </summary>
-        public Customer Customer { get; set; }
+        public User User { get; set; }
 
         /// <summary>
         /// Email

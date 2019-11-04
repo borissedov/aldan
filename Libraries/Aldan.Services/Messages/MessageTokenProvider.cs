@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net;
 using Aldan.Core;
 using Aldan.Core.Configuration;
-using Aldan.Core.Domain.Customers;
 using Aldan.Core.Domain.Messages;
-using Aldan.Services.Customers;
+using Aldan.Core.Domain.Users;
 using Aldan.Services.Events;
+using Aldan.Services.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -33,7 +33,7 @@ namespace Aldan.Services.Messages
         #region Ctor
 
         public MessageTokenProvider(
-            IActionContextAccessor actionContextAccessor, ICustomerService customerService,
+            IActionContextAccessor actionContextAccessor, IUserService userService,
             IEventPublisher eventPublisher, IUrlHelperFactory urlHelperFactory, IWorkContext workContext,
             AldanConfig config)
         {
@@ -73,20 +73,20 @@ namespace Aldan.Services.Messages
                     "%YouTube.URL%"
                 });
 
-                //customer tokens
-                _allowedTokens.Add(TokenGroupNames.CustomerTokens, new[]
+                //user tokens
+                _allowedTokens.Add(TokenGroupNames.UserTokens, new[]
                 {
-                    "%Customer.Email%",
-                    "%Customer.FullName%",
-                    "%Customer.FirstName%",
-                    "%Customer.LastName%",
-                    "%Customer.VatNumber%",
-                    "%Customer.VatNumberStatus%",
-                    "%Customer.CustomAttributes%",
-                    "%Customer.PasswordRecoveryURL%",
-                    "%Customer.AccountActivationURL%",
-                    "%Customer.EmailRevalidationURL%",
-                    "%Wishlist.URLForCustomer%"
+                    "%User.Email%",
+                    "%User.FullName%",
+                    "%User.FirstName%",
+                    "%User.LastName%",
+                    "%User.VatNumber%",
+                    "%User.VatNumberStatus%",
+                    "%User.CustomAttributes%",
+                    "%User.PasswordRecoveryURL%",
+                    "%User.AccountActivationURL%",
+                    "%User.EmailRevalidationURL%",
+                    "%Wishlist.URLForUser%"
                 });
 
                 //contact us tokens
@@ -153,17 +153,17 @@ namespace Aldan.Services.Messages
 
 
         /// <summary>
-        /// Add customer tokens
+        /// Add user tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="customer">Customer</param>
-        public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
+        /// <param name="user">User</param>
+        public virtual void AddUserTokens(IList<Token> tokens, User user)
         {
-            tokens.Add(new Token("Customer.Email", customer.Email));
+            tokens.Add(new Token("User.Email", user.Email));
             
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = customer.PasswordRecoveryToken, email = customer.Email });
-            tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
+            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = user.PasswordRecoveryToken, email = user.Email });
+            tokens.Add(new Token("User.PasswordRecoveryURL", passwordRecoveryUrl, true));
         }
 
         public IEnumerable<string> GetListOfAllowedTokens(IEnumerable<string> tokenGroups = null)
@@ -185,10 +185,10 @@ namespace Aldan.Services.Messages
             //groups depend on which tokens are added at the appropriate methods in IWorkflowMessageService
             switch (messageTemplate.Name)
             {
-                case MessageTemplateSystemNames.CustomerRegisteredNotification:
-                case MessageTemplateSystemNames.CustomerWelcomeMessage:
-                case MessageTemplateSystemNames.CustomerPasswordRecoveryMessage:
-                    return new[] { TokenGroupNames.FrameworkTokens, TokenGroupNames.CustomerTokens };
+                case MessageTemplateSystemNames.UserRegisteredNotification:
+                case MessageTemplateSystemNames.UserWelcomeMessage:
+                case MessageTemplateSystemNames.UserPasswordRecoveryMessage:
+                    return new[] { TokenGroupNames.FrameworkTokens, TokenGroupNames.UserTokens };
 
                 case MessageTemplateSystemNames.ContactUsMessage:
                     return new[] { TokenGroupNames.FrameworkTokens, TokenGroupNames.ContactUs };

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Aldan.Core.Domain.Customers;
 using Aldan.Core.Domain.Messages;
+using Aldan.Core.Domain.Users;
 
 namespace Aldan.Services.Messages
 {
@@ -16,11 +16,11 @@ namespace Aldan.Services.Messages
         void AddPlatformTokens(IList<Token> tokens);
 
         /// <summary>
-        /// Add customer tokens
+        /// Add user tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="customer">Customer</param>
-        void AddCustomerTokens(IList<Token> tokens, Customer customer);
+        /// <param name="user">User</param>
+        void AddUserTokens(IList<Token> tokens, User user);
 
         /// <summary>
         /// Get collection of allowed (supported) message tokens

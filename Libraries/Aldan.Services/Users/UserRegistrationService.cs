@@ -1,23 +1,23 @@
 using System;
 using Aldan.Core;
-using Aldan.Core.Domain.Customers;
+using Aldan.Core.Domain.Users;
 using Aldan.Services.Events;
 using Aldan.Services.Security;
 
-namespace Aldan.Services.Customers
+namespace Aldan.Services.Users
 {
-    public class CustomerRegistrationService : ICustomerRegistrationService
+    public class UserRegistrationService : IUserRegistrationService
     {
-        private readonly ICustomerService _customerService;
+        private readonly IUserService _userService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IEncryptionService _encryptionService;
 
-        public CustomerRegistrationService(
-            ICustomerService customerService,
+        public UserRegistrationService(
+            IUserService userService,
             IEventPublisher eventPublisher, 
             IEncryptionService encryptionService)
         {
-            _customerService = customerService;
+            _userService = userService;
             _eventPublisher = eventPublisher;
             _encryptionService = encryptionService;
         }
@@ -46,35 +46,35 @@ namespace Aldan.Services.Customers
 
         #endregion
 
-        public CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password)
+        public UserLoginResults ValidateUser(string usernameOrEmail, string password)
         {
-            var customer = _customerService.GetCustomerByEmail(usernameOrEmail);
+            var user = _userService.GetUserByEmail(usernameOrEmail);
 
-            if (customer == null)
-                return CustomerLoginResults.CustomerNotExist;
-            if (customer.Deleted)
-                return CustomerLoginResults.Deleted;
+            if (user == null)
+                return UserLoginResults.UserNotExist;
+            if (user.Deleted)
+                return UserLoginResults.Deleted;
 
-            if (!PasswordsMatch(customer.Password, customer.PasswordSalt, password))
+            if (!PasswordsMatch(user.Password, user.PasswordSalt, password))
             {
-                return CustomerLoginResults.WrongPassword;
+                return UserLoginResults.WrongPassword;
             }
 
-            customer.LastLoginDateUtc = DateTime.UtcNow;
-            _customerService.UpdateCustomer(customer);
+            user.LastLoginDateUtc = DateTime.UtcNow;
+            _userService.UpdateUser(user);
 
-            return CustomerLoginResults.Successful;
+            return UserLoginResults.Successful;
         }
 
-        public CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request)
+        public UserRegistrationResult RegisterUser(UserRegistrationRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            if (request.Customer == null)
-                throw new ArgumentException("Can't load current customer");
+            if (request.User == null)
+                throw new ArgumentException("Can't load current user");
 
-            var result = new CustomerRegistrationResult();
+            var result = new UserRegistrationResult();
 
             if (string.IsNullOrEmpty(request.Email))
             {
@@ -95,22 +95,22 @@ namespace Aldan.Services.Customers
             }
 
             //validate unique user
-            if (_customerService.GetCustomerByEmail(request.Email) != null)
+            if (_userService.GetUserByEmail(request.Email) != null)
             {
                 result.AddError("Account.Register.Errors.EmailAlreadyExists");
                 return result;
             }
 
             //at this point request is valid
-            request.Customer.Email = request.Email;
+            request.User.Email = request.Email;
 
-            var saltKey = _encryptionService.CreateSaltKey(AldanCustomerServiceDefaults.PasswordSaltKeySize);
-            request.Customer.PasswordSalt = saltKey;
-            request.Customer.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey);
+            var saltKey = _encryptionService.CreateSaltKey(AldanUserServiceDefaults.PasswordSaltKeySize);
+            request.User.PasswordSalt = saltKey;
+            request.User.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey);
 
-            request.Customer.Role = Role.User;
+            request.User.Role = Role.User;
 
-            _customerService.UpdateCustomer(request.Customer);
+            _userService.UpdateUser(request.User);
 
             return result;
         }
@@ -133,8 +133,8 @@ namespace Aldan.Services.Customers
                 return result;
             }
 
-            var customer = _customerService.GetCustomerByEmail(request.Email);
-            if (customer == null)
+            var user = _userService.GetUserByEmail(request.Email);
+            if (user == null)
             {
                 result.AddError("Account.ChangePassword.Errors.EmailNotFound");
                 return result;
@@ -142,34 +142,34 @@ namespace Aldan.Services.Customers
 
             //request isn't valid
             if (request.ValidateRequest &&
-                !PasswordsMatch(customer.Password, customer.PasswordSalt, request.OldPassword))
+                !PasswordsMatch(user.Password, user.PasswordSalt, request.OldPassword))
             {
                 result.AddError("Account.ChangePassword.Errors.OldPasswordDoesntMatch");
                 return result;
             }
 
-            var saltKey = _encryptionService.CreateSaltKey(AldanCustomerServiceDefaults.PasswordSaltKeySize);
-            customer.PasswordSalt = saltKey;
-            customer.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey);
+            var saltKey = _encryptionService.CreateSaltKey(AldanUserServiceDefaults.PasswordSaltKeySize);
+            user.PasswordSalt = saltKey;
+            user.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey);
 
-            _customerService.UpdateCustomer(customer);
+            _userService.UpdateUser(user);
 
             //publish event
-            _eventPublisher.Publish(new CustomerPasswordChangedEvent(customer.Id, request.NewPassword));
+            _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, request.NewPassword));
 
             return result;
         }
 
-        public void SetEmail(Customer customer, string newEmail, bool requireValidation)
+        public void SetEmail(User user, string newEmail, bool requireValidation)
         {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
 
             if (newEmail == null)
                 throw new AldanException("Email cannot be null");
 
             newEmail = newEmail.Trim();
-            var oldEmail = customer.Email;
+            var oldEmail = user.Email;
 
             if (!CommonHelper.IsValidEmail(newEmail))
                 throw new AldanException("Account.EmailUsernameErrors.NewEmailIsNotValid");
@@ -177,12 +177,12 @@ namespace Aldan.Services.Customers
             if (newEmail.Length > 100)
                 throw new AldanException("Account.EmailUsernameErrors.EmailTooLong");
 
-            var customer2 = _customerService.GetCustomerByEmail(newEmail);
-            if (customer2 != null && customer.Id != customer2.Id)
+            var user2 = _userService.GetUserByEmail(newEmail);
+            if (user2 != null && user.Id != user2.Id)
                 throw new AldanException("Account.EmailUsernameErrors.EmailAlreadyExists");
 
-            customer.Email = newEmail;
-            _customerService.UpdateCustomer(customer);
+            user.Email = newEmail;
+            _userService.UpdateUser(user);
         }
     }
 }

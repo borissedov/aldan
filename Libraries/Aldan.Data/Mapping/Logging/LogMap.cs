@@ -25,9 +25,9 @@ namespace Aldan.Data.Mapping.Logging
 
             builder.Ignore(logItem => logItem.LogLevel);
 
-            builder.HasOne(logItem => logItem.Customer)
+            builder.HasOne(logItem => logItem.User)
                 .WithMany()
-                .HasForeignKey(logItem => logItem.CustomerId)
+                .HasForeignKey(logItem => logItem.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             base.Configure(builder);

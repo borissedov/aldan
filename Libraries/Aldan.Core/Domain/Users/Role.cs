@@ -1,4 +1,4 @@
-namespace Aldan.Core.Domain.Customers
+namespace Aldan.Core.Domain.Users
 {
     public enum Role
     {

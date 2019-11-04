@@ -56,11 +56,11 @@ namespace Aldan.Web.Framework.Infrastructure.Extensions
 
                     try
                     {
-                        //get current customer
-                        var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+                        //get current user
+                        var currentUser = EngineContext.Current.Resolve<IWorkContext>().CurrentUser;
 
                         //log error
-                        EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                        EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentUser);
                     }
                     finally
                     {
@@ -133,7 +133,7 @@ namespace Aldan.Web.Framework.Infrastructure.Extensions
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
+                    logger.Error("Error 400. Bad request", null, user: workContext.CurrentUser);
                 }
 
                 return Task.CompletedTask;

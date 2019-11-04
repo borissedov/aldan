@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Aldan.Services.Customers
+namespace Aldan.Services.Users
 {
     /// <summary>
     /// Change password result

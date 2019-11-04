@@ -1,4 +1,4 @@
-using Aldan.Core.Domain.Customers;
+using Aldan.Core.Domain.Users;
 
 namespace Aldan.Services.Authentication
 {
@@ -10,9 +10,9 @@ namespace Aldan.Services.Authentication
         /// <summary>
         /// Sign in
         /// </summary>
-        /// <param name="customer">Customer</param>
+        /// <param name="user">User</param>
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
-        void SignIn(Customer customer, bool isPersistent);
+        void SignIn(User user, bool isPersistent);
 
         /// <summary>
         /// Sign out
@@ -20,9 +20,9 @@ namespace Aldan.Services.Authentication
         void SignOut();
 
         /// <summary>
-        /// Get authenticated customer
+        /// Get authenticated user
         /// </summary>
-        /// <returns>Customer</returns>
-        Customer GetAuthenticatedCustomer();
+        /// <returns>User</returns>
+        User GetAuthenticatedUser();
     }
 }

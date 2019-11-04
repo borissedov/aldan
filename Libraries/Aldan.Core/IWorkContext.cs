@@ -1,4 +1,4 @@
-﻿using Aldan.Core.Domain.Customers;
+﻿using Aldan.Core.Domain.Users;
 
 namespace Aldan.Core
 {
@@ -8,13 +8,13 @@ namespace Aldan.Core
     public interface IWorkContext
     {
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets or sets the current user
         /// </summary>
-        Customer CurrentCustomer { get; set; }
+        User CurrentUser { get; set; }
 
         /// <summary>
-        /// Gets the original customer (in case the current one is impersonated)
+        /// Gets the original user (in case the current one is impersonated)
         /// </summary>
-        Customer OriginalCustomerIfImpersonated { get; }
+        User OriginalUserIfImpersonated { get; }
     }
 }
