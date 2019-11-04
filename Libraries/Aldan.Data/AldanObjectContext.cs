@@ -34,8 +34,7 @@ namespace Aldan.Data
             //dynamically load all entity and query type configurations
             var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type => 
                 (type.BaseType?.IsGenericType ?? false) 
-                    && (type.BaseType.GetGenericTypeDefinition() == typeof(AldanEntityTypeConfiguration<>) 
-                        || type.BaseType.GetGenericTypeDefinition() == typeof(AldanQueryTypeConfiguration<>)));
+                    && type.BaseType.GetGenericTypeDefinition() == typeof(AldanEntityTypeConfiguration<>));
 
             foreach (var typeConfiguration in typeConfigurations)
             {
