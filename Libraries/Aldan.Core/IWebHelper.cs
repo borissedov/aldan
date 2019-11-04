@@ -35,18 +35,18 @@ namespace Aldan.Core
         bool IsCurrentConnectionSecured();
 
         /// <summary>
-        /// Gets store host location
+        /// Gets host location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL</param>
-        /// <returns>Store host location</returns>
-        string GetStoreHost(bool useSsl);
+        /// <returns>Host location</returns>
+        string GetHost(bool useSsl);
 
         /// <summary>
-        /// Gets store location
+        /// Gets location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
-        /// <returns>Store location</returns>
-        string GetStoreLocation(bool? useSsl = null);
+        /// <returns>Location</returns>
+        string GetLocation(bool? useSsl = null);
 
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the CMS engine.

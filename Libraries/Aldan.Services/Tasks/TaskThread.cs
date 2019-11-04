@@ -31,7 +31,7 @@ namespace Aldan.Services.Tasks
 
         static TaskThread()
         {
-            _scheduleTaskUrl = EngineContext.Current.Resolve<AldanConfig>().ScheduleTaskUrl;
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<AldanConfig>().PlatformSettings.Url}scheduletask/runtask";
             _timeout = 0;
         }
 

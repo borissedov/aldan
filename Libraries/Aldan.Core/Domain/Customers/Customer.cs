@@ -58,6 +58,7 @@ namespace Aldan.Core.Domain.Customers
         
         public Role Role { get; set; }
         public int? ImpersonatedCustomerId { get; set; }
+        public string PasswordRecoveryToken { get; set; }
 
         #region Navigation properties
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Aldan.Services.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Aldan.Web.Models;
@@ -11,16 +12,16 @@ namespace Aldan.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IWorkflowMessageService workflowMessageService)
         {
-            _logger = logger;
+            _workflowMessageService = workflowMessageService;
         }
 
         public IActionResult Index()
         {
-            return View();
+             return View();
         }
 
         public IActionResult Privacy()

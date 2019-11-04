@@ -178,11 +178,11 @@ namespace Aldan.Core
             if (!IsRequestAvailable())
                 return string.Empty;
 
-            //get store location
-            var storeLocation = GetStoreLocation(useSsl ?? IsCurrentConnectionSecured());
+            //get location
+            var location = GetLocation(useSsl ?? IsCurrentConnectionSecured());
 
             //add local path to the URL
-            var pageUrl = $"{storeLocation.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.Path}";
+            var pageUrl = $"{location.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.Path}";
 
             //add query string to the URL
             if (includeQueryString)
@@ -208,11 +208,11 @@ namespace Aldan.Core
         }
 
         /// <summary>
-        /// Gets store host location
+        /// Gets host location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL</param>
-        /// <returns>Store host location</returns>
-        public virtual string GetStoreHost(bool useSsl)
+        /// <returns>Host location</returns>
+        public virtual string GetHost(bool useSsl)
         {
             if (!IsRequestAvailable())
                 return string.Empty;
@@ -223,35 +223,35 @@ namespace Aldan.Core
                 return string.Empty;
 
             //add scheme to the URL
-            var storeHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}{Uri.SchemeDelimiter}{hostHeader.FirstOrDefault()}";
+            var host = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}{Uri.SchemeDelimiter}{hostHeader.FirstOrDefault()}";
 
             //ensure that host is ended with slash
-            storeHost = $"{storeHost.TrimEnd('/')}/";
+            host = $"{host.TrimEnd('/')}/";
 
-            return storeHost;
+            return host;
         }
 
         /// <summary>
-        /// Gets store location
+        /// Gets location
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
-        /// <returns>Store location</returns>
-        public virtual string GetStoreLocation(bool? useSsl = null)
+        /// <returns>Location</returns>
+        public virtual string GetLocation(bool? useSsl = null)
         {
-            var storeLocation = string.Empty;
+            var location = string.Empty;
 
-            //get store host
-            var storeHost = GetStoreHost(useSsl ?? IsCurrentConnectionSecured());
-            if (!string.IsNullOrEmpty(storeHost))
+            //get host
+            var host = GetHost(useSsl ?? IsCurrentConnectionSecured());
+            if (!string.IsNullOrEmpty(host))
             {
                 //add application path base if exists
-                storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
+                location = IsRequestAvailable() ? $"{host.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : host;
             }
 
             //ensure that URL is ended with slash
-            storeLocation = $"{storeLocation.TrimEnd('/')}/";
+            location = $"{location.TrimEnd('/')}/";
 
-            return storeLocation;
+            return location;
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace Aldan.Core
             //prepare URI object
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var isLocalUrl = urlHelper.IsLocalUrl(url);
-            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+            var uri = new Uri(isLocalUrl ? $"{GetLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
 
             //get current query parameters
             var queryParameters = QueryHelpers.ParseQuery(uri.Query);
@@ -330,7 +330,7 @@ namespace Aldan.Core
             //prepare URI object
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var isLocalUrl = urlHelper.IsLocalUrl(url);
-            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+            var uri = new Uri(isLocalUrl ? $"{GetLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
 
             //get current query parameters
             var queryParameters = QueryHelpers.ParseQuery(uri.Query)

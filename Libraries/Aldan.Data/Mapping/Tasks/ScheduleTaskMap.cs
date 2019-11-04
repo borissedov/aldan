@@ -23,6 +23,15 @@ namespace Aldan.Data.Mapping.Tasks
             builder.Property(task => task.Name).IsRequired();
             builder.Property(task => task.Type).IsRequired();
 
+            builder.HasData(new ScheduleTask
+                {
+                    Id = 1,
+                    Name = "Send emails",
+                    Seconds = 60,
+                    Type = "Aldan.Services.Messages.QueuedMessagesSendTask, Aldan.Services",
+                    Enabled = true,
+                    StopOnError = false
+                });
             base.Configure(builder);
         }
 

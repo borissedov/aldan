@@ -115,7 +115,7 @@ namespace Aldan.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = $"{AldanCookieDefaults.Prefix}{AldanCookieDefaults.AntiforgeryCookie}";
 
-                //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
+                //whether to allow the use of anti-forgery cookies from SSL protected page on the other pages which are not
                 options.Cookie.SecurePolicy = CookieSecurePolicy.None;
             });
         }
@@ -131,7 +131,7 @@ namespace Aldan.Web.Framework.Infrastructure.Extensions
                 options.Cookie.Name = $"{AldanCookieDefaults.Prefix}{AldanCookieDefaults.SessionCookie}";
                 options.Cookie.HttpOnly = true;
 
-                //whether to allow the use of session values from SSL protected page on the other store pages which are not
+                //whether to allow the use of session values from SSL protected page on the other pages which are not
                 options.Cookie.SecurePolicy = CookieSecurePolicy.None;
             });
         }
@@ -171,7 +171,7 @@ namespace Aldan.Web.Framework.Infrastructure.Extensions
                 options.LoginPath = AldanAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = AldanAuthenticationDefaults.AccessDeniedPath;
 
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                //whether to allow the use of authentication cookies from SSL protected page on the other pages which are not
                 options.Cookie.SecurePolicy =  CookieSecurePolicy.None;
             });
 
@@ -183,7 +183,7 @@ namespace Aldan.Web.Framework.Infrastructure.Extensions
                 options.LoginPath = AldanAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = AldanAuthenticationDefaults.AccessDeniedPath;
 
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                //whether to allow the use of authentication cookies from SSL protected page on the other pages which are not
                 options.Cookie.SecurePolicy = CookieSecurePolicy.None;
             });
 
@@ -218,7 +218,7 @@ namespace Aldan.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = $"{AldanCookieDefaults.Prefix}{AldanCookieDefaults.TempDataCookie}";
 
-                //whether to allow the use of cookies from SSL protected page on the other store pages which are not
+                //whether to allow the use of cookies from SSL protected page on the other pages which are not
                 options.Cookie.SecurePolicy = CookieSecurePolicy.None;
             });
             
