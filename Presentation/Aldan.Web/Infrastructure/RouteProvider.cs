@@ -17,12 +17,12 @@ namespace Aldan.Web.Infrastructure
         /// <param name="routeBuilder">Route builder</param>
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            //and default one
-            routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
-            
             //areas
             routeBuilder.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+            //and default one
+            routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
+            
             //home page
             routeBuilder.MapRoute("Homepage", "",
 				new { controller = "Home", action = "Index" });
@@ -40,7 +40,7 @@ namespace Aldan.Web.Infrastructure
 				new { controller = "User", action = "Logout" });
 
             //register result page
-            routeBuilder.MapRoute("RegisterResult", "registerresult/{resultId:min(0)}",
+            routeBuilder.MapRoute("RegisterResult", "registerresult/",
 				new { controller = "User", action = "RegisterResult" });
 
             //check username availability

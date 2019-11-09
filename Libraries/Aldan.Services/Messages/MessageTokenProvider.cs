@@ -6,6 +6,7 @@ using Aldan.Core;
 using Aldan.Core.Configuration;
 using Aldan.Core.Domain.Messages;
 using Aldan.Core.Domain.Users;
+using Aldan.Services.Common;
 using Aldan.Services.Events;
 using Aldan.Services.Users;
 using Microsoft.AspNetCore.Http;
@@ -27,19 +28,25 @@ namespace Aldan.Services.Messages
         private readonly AldanConfig _config;
 
         private Dictionary<string, IEnumerable<string>> _allowedTokens;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IUserService _userService;
 
         #endregion
 
         #region Ctor
 
         public MessageTokenProvider(
-            IActionContextAccessor actionContextAccessor, IUserService userService,
-            IEventPublisher eventPublisher, IUrlHelperFactory urlHelperFactory, IWorkContext workContext,
-            AldanConfig config)
+            IActionContextAccessor actionContextAccessor, 
+            IUserService userService,
+            IUrlHelperFactory urlHelperFactory, 
+            AldanConfig config, 
+            IGenericAttributeService genericAttributeService)
         {
             _actionContextAccessor = actionContextAccessor;
+            _userService = userService;
             _urlHelperFactory = urlHelperFactory;
             _config = config;
+            _genericAttributeService = genericAttributeService;
         }
 
         #endregion
@@ -160,9 +167,12 @@ namespace Aldan.Services.Messages
         public virtual void AddUserTokens(IList<Token> tokens, User user)
         {
             tokens.Add(new Token("User.Email", user.Email));
-            
+            tokens.Add(new Token("User.FullName", _userService.GetUserFullName(user)));
+            tokens.Add(new Token("User.FirstName", _genericAttributeService.GetAttribute<string>(user, AldanUserDefaults.FirstNameAttribute)));
+            tokens.Add(new Token("User.LastName", _genericAttributeService.GetAttribute<string>(user, AldanUserDefaults.LastNameAttribute)));
+
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = user.PasswordRecoveryToken, email = user.Email });
+            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = _genericAttributeService.GetAttribute<string>(user, AldanUserDefaults.PasswordRecoveryTokenAttribute), email = user.Email });
             tokens.Add(new Token("User.PasswordRecoveryURL", passwordRecoveryUrl, true));
         }
 

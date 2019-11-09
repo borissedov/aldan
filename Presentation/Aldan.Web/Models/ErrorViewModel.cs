@@ -1,5 +1,3 @@
-using System;
-
 namespace Aldan.Web.Models
 {
     public class ErrorViewModel

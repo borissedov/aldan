@@ -1,0 +1,22 @@
+﻿@inject IWorkContext workContext
+@inject Aldan.Services.Common.IGenericAttributeService genericAttributeService
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Aldan.Web.Framework
+
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Microsoft.AspNetCore.Routing
+@using Aldan.Core
+@using Aldan.Core.Infrastructure
+@using Aldan.Services.Events
+@using Aldan.Web.Areas.Admin.Models.Logging
+@using Aldan.Web.Areas.Admin.Models.Users
+@using Aldan.Web.Areas.Admin.Models.Common
+@using Aldan.Web.Framework
+@using Aldan.Web.Framework.Models
+@using Aldan.Web.Framework.Events
+@using Aldan.Web.Framework.Extensions
+@using Aldan.Web.Framework.Infrastructure
+@using Aldan.Web.Framework.Models.DataTables
+@using Aldan.Web.Framework.UI

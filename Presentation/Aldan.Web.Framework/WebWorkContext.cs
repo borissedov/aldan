@@ -3,6 +3,7 @@ using Aldan.Core;
 using Aldan.Core.Domain.Users;
 using Aldan.Core.Http;
 using Aldan.Services.Authentication;
+using Aldan.Services.Common;
 using Aldan.Services.Users;
 using Microsoft.AspNetCore.Http;
 
@@ -18,6 +19,8 @@ namespace Aldan.Web.Framework
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IGenericAttributeService _genericAttributeService;
+        
         private User _cachedUser;
         private User _originalUserIfImpersonated;
 
@@ -28,11 +31,12 @@ namespace Aldan.Web.Framework
         public WebWorkContext(
             IAuthenticationService authenticationService,
             IUserService userService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IGenericAttributeService genericAttributeService)
         {
             _authenticationService = authenticationService;
             _userService = userService;
             _httpContextAccessor = httpContextAccessor;
+            _genericAttributeService = genericAttributeService;
         }
 
         #endregion
@@ -101,7 +105,8 @@ namespace Aldan.Web.Framework
                 if (user != null && !user.Deleted)
                 {
                     //get impersonate user if required
-                    var impersonatedUserId = user.ImpersonatedUserId;
+                    var impersonatedUserId = _genericAttributeService
+                        .GetAttribute<int?>(user, AldanUserDefaults.ImpersonatedUserIdAttribute);
                     if (impersonatedUserId.HasValue && impersonatedUserId.Value > 0)
                     {
                         var impersonatedUser = _userService.GetUserById(impersonatedUserId.Value);

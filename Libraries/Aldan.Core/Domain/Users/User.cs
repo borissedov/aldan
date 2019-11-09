@@ -57,8 +57,6 @@ namespace Aldan.Core.Domain.Users
         public bool Deleted { get; set; }
         
         public Role Role { get; set; }
-        public int? ImpersonatedUserId { get; set; }
-        public string PasswordRecoveryToken { get; set; }
 
         #region Navigation properties
 

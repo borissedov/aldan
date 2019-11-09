@@ -1,0 +1,56 @@
+﻿@using Aldan.Core
+@model LoginModel
+
+@inject IWebHelper webHelper
+@{
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.CurrentRequestProtocol);
+}
+<div class="page login-page">
+    <div class="page-title">
+        <h1>Welcome, Please Sign In!</h1>
+    </div>
+    <div class="page-body">
+        <div class="user-blocks">
+            <div class="new-wrapper register-block">
+                    <div class="title">
+                        <strong>New User</strong>
+                    </div>
+                    <div class="buttons">
+                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="Register" />
+                    </div>
+            </div>
+            
+            <div class="returning-wrapper fieldset">
+                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="message-error">Login was unsuccessful. Please correct the errors and try again.</div>
+                    <div class="title">
+                        <strong>Returning User</strong>
+                    </div>
+                    <div class="form-fields">
+                            <div class="inputs">
+                                <label asp-for="Email" asp-postfix=":"></label>
+                                <input asp-for="Email" class="email" autofocus="autofocus" />
+                                <span asp-validation-for="Email"></span>
+                            </div>
+                        <div class="inputs">
+                            <label asp-for="Password" asp-postfix=":"></label>
+                            <input asp-for="Password" class="password" />
+                            <span asp-validation-for="Password"></span>
+                        </div>
+                        <div class="inputs reversed">
+                            <input asp-for="RememberMe" />
+                            <label asp-for="RememberMe"></label>
+                            <span class="forgot-password">
+                                <a asp-route="PasswordRecovery">Forgot password?</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <input class="button-1 login-button" type="submit" value="Log in" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

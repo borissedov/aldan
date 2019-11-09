@@ -1,0 +1,107 @@
+﻿@model UserModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <aldan-label asp-for="Email"/>
+        </div>
+        <div class="col-md-9">
+            <aldan-editor asp-for="Email"/>
+            <span asp-validation-for="Email"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <aldan-label asp-for="Password"/>
+        </div>
+        <div class="col-md-9">
+            <div class="input-group">
+                <aldan-editor asp-for="Password"/>
+                <div class="input-group-btn">
+                    @if (Model.Id > 0)
+                    {
+                        <button type="submit" name="changepassword" class="btn btn-info">
+                            Change password
+                        </button>
+                    }
+                </div>
+            </div>
+            <span asp-validation-for="Password"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <aldan-label asp-for="FirstName"/>
+        </div>
+        <div class="col-md-9">
+            <aldan-editor asp-for="FirstName"/>
+            <span asp-validation-for="FirstName"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <aldan-label asp-for="LastName"/>
+        </div>
+        <div class="col-md-9">
+            <aldan-editor asp-for="LastName"/>
+            <span asp-validation-for="LastName"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <aldan-label asp-for="SelectedUserRoleId"/>
+        </div>
+        <div class="col-md-9">
+            <div class="input-group input-group-required">
+                <aldan-select asp-for="SelectedUserRoleId" asp-items="Model.AvailableUserRoles" asp-multiple="false"/>
+                <div class="input-group-btn">
+                    <aldan-required/>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div class="form-group">
+            <div class="col-md-3">
+                <aldan-label asp-for="LastIpAddress"/>
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.LastIpAddress</div>
+            </div>
+        </div>
+    }
+    @if (Model.Id > 0)
+    {
+        <div class="form-group">
+            <div class="col-md-3">
+                <aldan-label asp-for="CreatedOn"/>
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.CreatedOn</div>
+            </div>
+        </div>
+    }
+    @if (Model.Id > 0)
+    {
+        <div class="form-group">
+            <div class="col-md-3">
+                <aldan-label asp-for="LastActivityDate"/>
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.LastActivityDate</div>
+            </div>
+        </div>
+    }
+    @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.LastVisitedPage))
+    {
+        <div class="form-group">
+            <div class="col-md-3">
+                <aldan-label asp-for="LastVisitedPage"/>
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.LastVisitedPage</div>
+            </div>
+        </div>
+    }
+</div>

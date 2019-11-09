@@ -1,0 +1,17 @@
+﻿@using Aldan.Web.Framework.Menu
+
+@inject IWorkContext workContext
+
+<ul class="sidebar-menu" data-widget="tree">
+    @{
+        //load sitemap
+        var siteMap = new XmlSiteMap();
+        siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
+
+        //display menu items
+        foreach (var item in siteMap.RootNode.ChildNodes.Where(x => x.Visible))
+        {
+            @await Html.PartialAsync("_MenuItem", item)
+        }
+    }
+</ul>

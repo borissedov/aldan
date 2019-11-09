@@ -1,0 +1,183 @@
+﻿@model UserSearchModel
+
+@{
+    //page title
+    ViewBag.Title = "Users";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Users list");
+}
+
+<form asp-controller="User" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            Users
+        </h1>
+        <div class="pull-right">
+            <a asp-action="Create" class="btn bg-blue">
+                <i class="fa fa-plus-square"></i>
+                Add new
+            </a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel-body">
+                        <div class="row search-row opened">
+                            <div class="search-text">Search</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <aldan-label asp-for="SearchEmail" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <aldan-editor asp-for="SearchEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <aldan-label asp-for="SearchFirstName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <aldan-editor asp-for="SearchFirstName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <aldan-label asp-for="SearchLastName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <aldan-editor asp-for="SearchLastName" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <aldan-label asp-for="SearchIpAddress" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <aldan-editor asp-for="SearchIpAddress" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <aldan-label asp-for="SelectedUserRoleIds" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <aldan-select asp-for="SelectedUserRoleIds" asp-items="Model.AvailableUserRoles" asp-multiple="true" />
+                                            <script>
+                                            $(document).ready(function() {
+                                                var rolesIdsInput =
+                                                    $('#@Html.IdFor(model => model.SelectedUserRoleIds)')
+                                                        .data("kendoMultiSelect");
+                                                rolesIdsInput.setOptions({
+                                                    autoClose: false,
+                                                    filter: "contains"
+                                                });
+
+                                                @if (Model.AvailableUserRoles.Count == 0)
+                                                {
+                                                    <text>
+                                                        rolesIdsInput.setOptions({
+                                                            enable: false,
+                                                            placeholder:
+                                                                'No user roles available'
+                                                        });
+                                                        rolesIdsInput._placeholder();
+                                                        rolesIdsInput._enable();
+                                                    </text>
+                                                }
+                                            });
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-users" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @{
+                            var gridModel = new DataTablesModel
+                            {
+                                Name = "users-grid",
+                                UrlRead = new DataUrl("UserList", "User", null),
+                                SearchButtonId = "search-users",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SelectedUserRoleIds)),
+                                    new FilterParameter(nameof(Model.SearchEmail)),
+                                    new FilterParameter(nameof(Model.SearchIpAddress)),
+                                    new FilterParameter(nameof(Model.SearchFirstName)),
+                                    new FilterParameter(nameof(Model.SearchLastName))
+                                }
+                            };
+
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(UserModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_users"),
+                                ClassName = AldanColumnClassDefaults.CenterAll,
+                                Width = "50",
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(UserModel.Email))
+                            {
+                                Title = "Email",
+                                Width = "200"
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(UserModel.FullName))
+                            {
+                                Title = "Full name",
+                                Width = "200"
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(UserModel.RoleName))
+                            {
+                                Title = "User role",
+                                Width = "200"
+                            });
+                            
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(UserModel.CreatedOn))
+                            {
+                                Title = "Created on",
+                                Width = "200",
+                                Render = new RenderDate()
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(UserModel.LastActivityDate))
+                            {
+                                Title = "Last activity date",
+                                Width = "200",
+                                Render = new RenderDate()
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(UserModel.Id))
+                            {
+                                Title = "Edit",
+                                Width = "100",
+                                ClassName = AldanColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            });
+                        }
+                        @await Html.PartialAsync("Table", gridModel)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

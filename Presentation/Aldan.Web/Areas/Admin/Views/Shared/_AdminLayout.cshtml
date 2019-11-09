@@ -1,0 +1,218 @@
+﻿@inject IWebHelper webHelper
+@inject IUserService userService
+@inject IEventPublisher eventPublisher
+
+@using System.Globalization
+@using Aldan.Services.Users
+
+@{
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
+
+
+    //page title
+    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
+    adminPageTitle += "Aldan administration";
+
+    //avatar
+    var currentUser = workContext.CurrentUser;
+
+    //event
+    eventPublisher.Publish(new PageRenderingEvent(this.Html));
+
+    //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @*Google Font*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <script>
+        var rootAppPath = '@(Url.Content("~/"))';
+    </script>
+    <link href="~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/css/admin/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/adminLTE/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+    <link href="~/lib/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/datatables/buttons.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/datatables/css/dataTables.bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/kendo/2014.1.318/kendo.default.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/kendo/2014.1.318/kendo.common.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css"rel="stylesheet" type="text/css"/>
+    <link href="~/lib/fontAwesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/typeahead/typeahead.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/adminLTE/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css"/>
+
+    <script src="~/lib/jquery/jquery-1.10.2.min.js"></script>
+    <script src="~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/adminLTE/js/adminlte.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate-v1.11.1/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="~/lib/jquery-migrate/jquery-migrate-1.2.1.min.js"></script>
+    <script src="~/lib/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/js/admin.common.js"></script>
+    <script src="~/js/admin.navigation.js"></script>
+    <script src="~/js/admin.search.js"></script>
+    <script src="~/lib/kendo/2014.1.318/kendo.web.min.js"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/lib/datatables/datatables.min.js"></script>
+    <script src="~/lib/datatables/moment-with-locales-2.22.2.min.js"></script>
+    <script src="~/lib/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/lib/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/lib/chartjs/Chart.min.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="throbber">
+    <div class="curtain">
+    </div>
+    <div class="curtain-content">
+        <div>
+            <h1 class="throbber-header">Wait...</h1>
+            <p>
+                <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt=""/>
+            </p>
+        </div>
+    </div>
+</div>
+<div id="ajaxBusy">
+    <span>&nbsp;</span>
+</div>
+<div class="wrapper">
+    @if (IsSectionDefined("header"))
+    {
+        @RenderSection("header")
+    }
+    else
+    {
+        <div class="main-header">
+            <a href="@Url.Content("~/Admin")" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"></span>
+            </a>
+            <div class="navbar navbar-static-top" role="navigation">
+                <a href="#" id="aldanSideBarPusher" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">&nbsp;</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="account-info">
+                            @currentUser.Email
+                        </li>
+                        <li>
+                            <a asp-controller="User" asp-action="Logout" asp-area="">Logout</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Home" asp-action="Index" asp-area="">Public portal</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown">
+                                <i class="fa fa-gears"></i>
+                            </a>
+                            <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
+                                <li>
+                                    <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
+                                        <input name="returnurl" type="hidden" value="@returnUrl">
+                                        <button type="submit" class="bg-light-blue">
+                                            <span>Clear cache</span>
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
+                                        <input name="returnurl" type="hidden" value="@returnUrl">
+                                        <button id="restart-application" type="submit" class="bg-light-blue">
+                                            <span>Restart application</span>
+                                        </button>
+                                        <script>
+                                            $(document).ready(function () {
+                                                $("#restart-application").click(function (e) {
+                                                    showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Restarting the application..."))');
+                                                });
+                                            }); 
+                                        </script>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    @if (IsSectionDefined("headermenu"))
+    {
+        @RenderSection("headermenu")
+    }
+    else
+    {
+        <div class="main-sidebar">
+            <div class="sidebar">
+                <div class="sidebar-form">
+                    <div id="search-box">
+                        <input type="text" class="form-control admin-search-box typeahead" placeholder="Search">
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        Admin.Search.init();
+                    });
+                </script>
+                @await Html.PartialAsync("Menu")
+            </div>
+        </div>
+    }
+    <div class="content-wrapper">
+        @await Html.PartialAsync("Notifications")
+        <div>
+            @RenderBody()
+        </div>
+    </div>
+    <div class="main-footer clearfix">
+        <div class="text-center">
+            @DateTime.Now.ToString("f", CultureInfo.InvariantCulture)
+        </div>
+    </div>
+</div>
+<script>
+    var AdminLTEOptions = {
+        boxWidgetOptions: {
+            boxWidgetIcons: {
+                collapse: 'fa-minus',
+                open: 'fa-plus'
+            }
+        }
+    };
+</script>
+@{
+    //scroll to a selected panel (if specified)
+    var selectedPanelName = this.Html.GetSelectedPanelName();
+    if (!String.IsNullOrEmpty(selectedPanelName))
+    {
+        <script>
+            location.hash = '#@(selectedPanelName)';
+        </script>
+    }
+}
+<a id="backTop" class="btn btn-back-top bg-teal"></a>
+<script>
+    $(document).ready(function () {
+        //enable "back top" arrow
+        $('#backTop').backTop();
+    
+        //enable tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

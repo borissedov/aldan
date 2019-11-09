@@ -1,0 +1,123 @@
+﻿@using Aldan.Web.Areas.Admin.Models.Tasks
+@model Aldan.Web.Areas.Admin.Models.Tasks.ScheduleTaskSearchModel
+
+@{
+    //page title
+    ViewBag.Title = "Schedule tasks";
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Schedule tasks");
+}
+
+<aldan-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Schedule tasks
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
+            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Running the schedule task"))');
+        });
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        Task period should not exceed 24 days.
+                    </p>
+                    <p>
+                        <strong>Do not forget to restart the application once a task has been modified.</strong>
+                    </p>
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "schedule-tasks-grid",
+                        UrlRead = new DataUrl("List", "ScheduleTask", null),
+                        UrlUpdate = new DataUrl("TaskUpdate", "ScheduleTask", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ScheduleTaskModel.Name))
+                                {
+                                    Title = "Name",
+                                    Width = "300",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Seconds))
+                                {
+                                    Title = "Seconds (run period",
+                                    Width = "150",
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Enabled))
+                                {
+                                    Title = "Enabled",
+                                    Width = "100",
+                                    ClassName = AldanColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.StopOnError))
+                                {
+                                    Title = "Stop on error",
+                                    Width = "100",
+                                    ClassName = AldanColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastStartUtc))
+                                {
+                                    Title = "Last start date",
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastEndUtc))
+                                {
+                                    Title = "Last end date",
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastSuccessUtc))
+                                {
+                                    Title = "Last success date",
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                {
+                                    Title = "Run now",
+                                    Width = "100",
+                                    ClassName =  AldanColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnRunNow")
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                {
+                                    Title = "Edit",
+                                    Width = "200",
+                                    ClassName =  AldanColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
+                    
+                    <script>
+                        function renderColumnRunNow(data, type, row, meta) {
+                            return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn bg-green">Run now</a>';
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

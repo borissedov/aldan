@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Aldan.Core;
 using Aldan.Core.Data;
+using Aldan.Core.Domain.Common;
 using Aldan.Core.Domain.Users;
+using Aldan.Services.Common;
 using Aldan.Services.Events;
 
 namespace Aldan.Services.Users
@@ -12,16 +14,26 @@ namespace Aldan.Services.Users
     {
         private readonly IRepository<User> _userRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IRepository<GenericAttribute> _gaRepository;
+
+        private const int PasswordRecoveryLinkDaysValid = 7;
 
         public UserService(
-            IRepository<User> userRepository, IEventPublisher eventPublisher)
+            IRepository<User> userRepository, 
+            IEventPublisher eventPublisher, 
+            IGenericAttributeService genericAttributeService, 
+            IRepository<GenericAttribute> gaRepository)
         {
             _userRepository = userRepository;
             _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _gaRepository = gaRepository;
         }
 
-        public IPagedList<User> GetAllUsers(DateTime? createdFromUtc = null, DateTime? createdToUtc = null, Role[] userRoles = null,
-            string email = null, string ipAddress = null, int pageIndex = 0, int pageSize = Int32.MaxValue,
+        public IPagedList<User> GetAllUsers(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            int[] userRoleIds = null, string email = null,  string firstName = null, string lastName = null,
+            string ipAddress = null, int pageIndex = 0, int pageSize = int.MaxValue,
             bool getOnlyTotalCount = false)
         {
             var query = _userRepository.Table;
@@ -32,11 +44,31 @@ namespace Aldan.Services.Users
             
             query = query.Where(c => !c.Deleted);
 
-            if (userRoles != null && userRoles.Length > 0)
-                query = query.Where(z => userRoles.Contains(z.Role));
+            if (userRoleIds != null && userRoleIds.Length > 0)
+                query = query.Where(z => userRoleIds.Contains((int)z.Role));
 
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
+            
+            if (!string.IsNullOrWhiteSpace(firstName))
+            {
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { User = x, Attribute = y })
+                    .Where(z => z.Attribute.KeyGroup == nameof(User) &&
+                                z.Attribute.Key == AldanUserDefaults.FirstNameAttribute &&
+                                z.Attribute.Value.Contains(firstName))
+                    .Select(z => z.User);
+            }
+
+            if (!string.IsNullOrWhiteSpace(lastName))
+            {
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { User = x, Attribute = y })
+                    .Where(z => z.Attribute.KeyGroup == nameof(User) &&
+                                z.Attribute.Key == AldanUserDefaults.LastNameAttribute &&
+                                z.Attribute.Value.Contains(lastName))
+                    .Select(z => z.User);
+            }
             
             //search by IpAddress
             if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
@@ -152,6 +184,66 @@ namespace Aldan.Services.Users
 
             //event notification
             _eventPublisher.EntityUpdated(user);
+        }
+
+        public bool IsPasswordRecoveryTokenValid(User user, string token)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            var cPrt = _genericAttributeService.GetAttribute<string>(user, AldanUserDefaults.PasswordRecoveryTokenAttribute);
+            if (string.IsNullOrEmpty(cPrt))
+                return false;
+
+            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
+                return false;
+
+            return true;
+            
+        }
+
+        public bool IsPasswordRecoveryLinkExpired(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            var generatedDate =  _genericAttributeService.GetAttribute<DateTime?>(user, AldanUserDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
+            if (!generatedDate.HasValue)
+                return false;
+
+            var daysPassed = (DateTime.UtcNow - generatedDate.Value).TotalDays;
+            if (daysPassed > PasswordRecoveryLinkDaysValid)
+                return true;
+
+            return false;        
+        }
+        
+        /// <summary>
+        /// Get full name
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <returns>User full name</returns>
+        public virtual string GetUserFullName(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            var firstName = _genericAttributeService.GetAttribute<string>(user, AldanUserDefaults.FirstNameAttribute);
+            var lastName = _genericAttributeService.GetAttribute<string>(user, AldanUserDefaults.LastNameAttribute);
+
+            var fullName = string.Empty;
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+                fullName = $"{firstName} {lastName}";
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(firstName))
+                    fullName = firstName;
+
+                if (!string.IsNullOrWhiteSpace(lastName))
+                    fullName = lastName;
+            }
+
+            return fullName;
         }
     }
 }
