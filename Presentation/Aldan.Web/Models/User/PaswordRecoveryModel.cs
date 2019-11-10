@@ -7,7 +7,7 @@ namespace Aldan.Web.Models.User
     public partial class PasswordRecoveryModel : BaseAldanModel
     {
         [DataType(DataType.EmailAddress)]
-        [DisplayName("Account.PasswordRecovery.Email")]
+        [DisplayName("Email")]
         public string Email { get; set; }
 
         public string Result { get; set; }

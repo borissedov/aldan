@@ -7,15 +7,15 @@ namespace Aldan.Web.Models.User
     public partial class ChangePasswordModel : BaseAldanModel
     {
         [DataType(DataType.Password)]
-        [DisplayName("Account.ChangePassword.Fields.OldPassword")]
+        [DisplayName("Old password")]
         public string OldPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [DisplayName("Account.ChangePassword.Fields.NewPassword")]
+        [DisplayName("New password")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [DisplayName("Account.ChangePassword.Fields.ConfirmNewPassword")]
+        [DisplayName("Confirm password")]
         public string ConfirmNewPassword { get; set; }
 
         public string Result { get; set; }

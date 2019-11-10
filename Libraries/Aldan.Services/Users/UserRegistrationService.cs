@@ -78,26 +78,26 @@ namespace Aldan.Services.Users
 
             if (string.IsNullOrEmpty(request.Email))
             {
-                result.AddError("Account.Register.Errors.EmailIsNotProvided");
+                result.AddError("Email is required.");
                 return result;
             }
 
             if (!CommonHelper.IsValidEmail(request.Email))
             {
-                result.AddError("Common.WrongEmail");
+                result.AddError("Wrong email");
                 return result;
             }
 
             if (string.IsNullOrWhiteSpace(request.Password))
             {
-                result.AddError("Account.Register.Errors.PasswordIsNotProvided");
+                result.AddError("Password is not provided");
                 return result;
             }
 
             //validate unique user
             if (_userService.GetUserByEmail(request.Email) != null)
             {
-                result.AddError("Account.Register.Errors.EmailAlreadyExists");
+                result.AddError("The specified email already exists");
                 return result;
             }
 
@@ -123,20 +123,20 @@ namespace Aldan.Services.Users
             var result = new ChangePasswordResult();
             if (string.IsNullOrWhiteSpace(request.Email))
             {
-                result.AddError("Account.ChangePassword.Errors.EmailIsNotProvided");
+                result.AddError("Email is not entered");
                 return result;
             }
 
             if (string.IsNullOrWhiteSpace(request.NewPassword))
             {
-                result.AddError("Account.ChangePassword.Errors.PasswordIsNotProvided");
+                result.AddError("Password is not entered");
                 return result;
             }
 
             var user = _userService.GetUserByEmail(request.Email);
             if (user == null)
             {
-                result.AddError("Account.ChangePassword.Errors.EmailNotFound");
+                result.AddError("The specified email could not be found");
                 return result;
             }
 
@@ -144,7 +144,7 @@ namespace Aldan.Services.Users
             if (request.ValidateRequest &&
                 !PasswordsMatch(user.Password, user.PasswordSalt, request.OldPassword))
             {
-                result.AddError("Account.ChangePassword.Errors.OldPasswordDoesntMatch");
+                result.AddError("Old password doesn't match");
                 return result;
             }
 
@@ -172,14 +172,14 @@ namespace Aldan.Services.Users
             var oldEmail = user.Email;
 
             if (!CommonHelper.IsValidEmail(newEmail))
-                throw new AldanException("Account.EmailUsernameErrors.NewEmailIsNotValid");
+                throw new AldanException("New email is not valid");
 
             if (newEmail.Length > 100)
-                throw new AldanException("Account.EmailUsernameErrors.EmailTooLong");
+                throw new AldanException("E-mail address is too long");
 
             var user2 = _userService.GetUserByEmail(newEmail);
             if (user2 != null && user.Id != user2.Id)
-                throw new AldanException("Account.EmailUsernameErrors.EmailAlreadyExists");
+                throw new AldanException("The e-mail address is already in use");
 
             user.Email = newEmail;
             _userService.UpdateUser(user);
