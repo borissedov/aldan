@@ -3,6 +3,7 @@ using Aldan.Core.Infrastructure;
 using Aldan.Core.Infrastructure.DependencyManagement;
 using Aldan.Web.Areas.Admin.Factories;
 using Autofac;
+
 namespace Aldan.Web.Infrastructure
 {
     /// <summary>
@@ -26,6 +27,7 @@ namespace Aldan.Web.Infrastructure
             builder.RegisterType<MessageTemplateModelFactory>().As<IMessageTemplateModelFactory>()
                 .InstancePerLifetimeScope();
             
+            builder.RegisterType<Aldan.Web.Factories.CommonModelFactory>().As<Aldan.Web.Factories.ICommonModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<LogModelFactory>().As<ILogModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<ScheduleTaskModelFactory>().As<IScheduleTaskModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<BaseAdminModelFactory>().As<IBaseAdminModelFactory>().InstancePerLifetimeScope();

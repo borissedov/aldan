@@ -1,0 +1,19 @@
+﻿@model AdminHeaderLinksModel
+@if (Model.IsUserImpersonated || Model.DisplayAdminLink)
+{
+    <div class="admin-header-links">
+        @if (Model.IsUserImpersonated)
+        {
+            <div class="impersonate">
+                <span>Impersonated as @Model.ImpersonatedUserName</span>
+                <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="Click here to finish impersonated session">
+                    finish impersonated session
+                </a>
+            </div>
+        }
+        @if (Model.DisplayAdminLink)
+        {
+            <a href="@Url.Content("~/Admin")" class="administration">Administration</a>
+        }
+    </div>
+}
