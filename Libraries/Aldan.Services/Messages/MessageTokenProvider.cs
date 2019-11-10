@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Aldan.Core;
 using Aldan.Core.Configuration;
 using Aldan.Core.Domain.Messages;
 using Aldan.Core.Domain.Users;
 using Aldan.Services.Common;
-using Aldan.Services.Events;
 using Aldan.Services.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -87,13 +85,7 @@ namespace Aldan.Services.Messages
                     "%User.FullName%",
                     "%User.FirstName%",
                     "%User.LastName%",
-                    "%User.VatNumber%",
-                    "%User.VatNumberStatus%",
-                    "%User.CustomAttributes%",
-                    "%User.PasswordRecoveryURL%",
-                    "%User.AccountActivationURL%",
-                    "%User.EmailRevalidationURL%",
-                    "%Wishlist.URLForUser%"
+                    "%User.PasswordRecoveryURL%"
                 });
 
                 //contact us tokens

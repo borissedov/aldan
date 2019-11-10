@@ -2,5 +2,4 @@ bin/
 obj/
 /packages/
 /.idea/
-/Presentation/Aldan.Web/wwwroot/lib/
 /Presentation/Aldan.Web/App_Data/DataProtectionKeys/

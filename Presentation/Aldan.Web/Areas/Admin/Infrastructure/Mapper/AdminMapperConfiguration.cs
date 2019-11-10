@@ -1,8 +1,10 @@
 ﻿using Aldan.Core.Domain.Logging;
+using Aldan.Core.Domain.Messages;
 using Aldan.Core.Domain.Tasks;
 using Aldan.Core.Domain.Users;
 using Aldan.Core.Infrastructure.Mapper;
 using Aldan.Web.Areas.Admin.Models.Logging;
+using Aldan.Web.Areas.Admin.Models.Messages;
 using Aldan.Web.Areas.Admin.Models.Tasks;
 using Aldan.Web.Areas.Admin.Models.Users;
 using AutoMapper;
@@ -22,9 +24,8 @@ namespace Aldan.Web.Areas.Admin.Infrastructure.Mapper
             CreateLoggingMaps();
             CreateUsersMaps();
             CreateTasksMaps();
+            CreateMessagesMaps();
         }
-
-
 
         #endregion
 
@@ -91,6 +92,22 @@ namespace Aldan.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.LastSuccessUtc, options => options.Ignore());
         }
 
+        /// <summary>
+        /// Create messages maps 
+        /// </summary>
+        protected virtual void CreateMessagesMaps()
+        {
+            CreateMap<MessageTemplate, MessageTemplateModel>()
+                .ForMember(model => model.AllowedTokens, options => options.Ignore());
+            CreateMap<MessageTemplateModel, MessageTemplate>();
+
+            CreateMap<QueuedEmail, QueuedEmailModel>()
+                .ForMember(model => model.CreatedOn, options => options.Ignore())
+                .ForMember(model => model.SentOn, options => options.Ignore());
+            CreateMap<QueuedEmailModel, QueuedEmail>()
+                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
+                .ForMember(entity => entity.SentOnUtc, options => options.Ignore());
+        }
         
         #endregion
 

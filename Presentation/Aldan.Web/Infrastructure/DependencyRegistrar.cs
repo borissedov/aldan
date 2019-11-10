@@ -22,6 +22,10 @@ namespace Aldan.Web.Infrastructure
             
             builder.RegisterType<Aldan.Web.Areas.Admin.Factories.CommonModelFactory>().As<Aldan.Web.Areas.Admin.Factories.ICommonModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<Aldan.Web.Areas.Admin.Factories.UserModelFactory>().As<Aldan.Web.Areas.Admin.Factories.IUserModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<QueuedEmailModelFactory>().As<IQueuedEmailModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<MessageTemplateModelFactory>().As<IMessageTemplateModelFactory>()
+                .InstancePerLifetimeScope();
+            
             builder.RegisterType<LogModelFactory>().As<ILogModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<ScheduleTaskModelFactory>().As<IScheduleTaskModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<BaseAdminModelFactory>().As<IBaseAdminModelFactory>().InstancePerLifetimeScope();

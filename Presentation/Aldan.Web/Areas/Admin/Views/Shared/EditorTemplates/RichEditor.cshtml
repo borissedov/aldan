@@ -1,0 +1,41 @@
+﻿@model string
+@{
+    var random = CommonHelper.GenerateRandomInteger();
+
+    //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
+    //false by default
+    var enableFullPage = Convert.ToBoolean(ViewData["aldan.RichEditor.EnableFullPage"] ?? false);
+}
+
+<script>
+    $(document).ready(function() {
+        var defaultEditorSettings@(random) = {
+            selector: "#@Html.IdForModel()",
+            fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+            height: 200,
+            width: '100%',
+            autoresize_min_height: 200,
+            autoresize_max_height: 200,
+            plugins: [
+                "advlist autolink autoresize directionality lists link image charmap preview anchor",
+                "searchreplace visualblocks code fullscreen textcolor",
+                "insertdatetime media table contextmenu paste@(enableFullPage ? " fullpage" : null)"
+            ],
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+            //"relative_urls" required by jbimages plugin to be set to "false"
+            relative_urls: false,
+            //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)
+            //otherwise, it'll break existing links when editing message template
+            convert_urls: false,
+            //ensure that special chars are not encoded. For example, ä, ö and ü should NOT become "&auml;", "&ouml;" and "&uuml;"
+            //Otherwise, database searches become impossible when words contain a character of this kind
+            entity_encoding: "raw",            
+            invalid_elements: "script"
+        };
+
+        tinyMCE.init(defaultEditorSettings@(random));
+    });
+</script>
+
+<textarea asp-for="@Model">@ViewData.TemplateInfo.FormattedModelValue</textarea>
+<nop-alert asp-alert-id="createConfigurationFailed" />

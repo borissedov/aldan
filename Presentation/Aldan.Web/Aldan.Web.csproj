@@ -44,6 +44,7 @@
 
     <ItemGroup>
       <Folder Include="Areas\Admin\Infrastructure" />
+      <Folder Include="Areas\Admin\Views\Shared\Components" />
     </ItemGroup>
 
 </Project>

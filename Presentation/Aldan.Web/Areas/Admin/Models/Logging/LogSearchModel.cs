@@ -23,18 +23,18 @@ namespace Aldan.Web.Areas.Admin.Models.Logging
 
         #region Properties
 
-        [DisplayName("Admin.System.Log.List.CreatedOnFrom")]
+        [DisplayName("Created from")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnFrom { get; set; }
 
-        [DisplayName("Admin.System.Log.List.CreatedOnTo")]
+        [DisplayName("Created to")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnTo { get; set; }
 
-        [DisplayName("Admin.System.Log.List.Message")]
+        [DisplayName("Message")]
         public string Message { get; set; }
 
-        [DisplayName("Admin.System.Log.List.LogLevel")]
+        [DisplayName("Log level")]
         public int LogLevelId { get; set; }
 
         public IList<SelectListItem> AvailableLogLevels { get; set; }
