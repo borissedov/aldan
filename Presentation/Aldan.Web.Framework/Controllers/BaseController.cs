@@ -20,6 +20,8 @@ namespace Aldan.Web.Framework.Controllers
     /// Base controller
     /// </summary>
     [SaveIpAddress]
+    [SaveLastActivity]
+    [SaveLastVisitedPage]
     public abstract class BaseController : Controller
     {
         #region Rendering
