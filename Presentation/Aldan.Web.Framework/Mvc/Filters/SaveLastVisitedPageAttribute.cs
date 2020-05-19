@@ -76,6 +76,9 @@ namespace Aldan.Web.Framework.Mvc.Filters
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
 
+                if(_workContext.CurrentUser == null)
+                    return;
+                
                 //get previous last page
                 var previousPageUrl = _genericAttributeService.GetAttribute<string>(_workContext.CurrentUser, AldanUserDefaults.LastVisitedPageAttribute);
 

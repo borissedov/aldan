@@ -66,6 +66,9 @@ namespace Aldan.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
+                if(_workContext.CurrentUser == null)
+                    return;
+                
                 //update last activity date
                 if (_workContext.CurrentUser.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
                 {
